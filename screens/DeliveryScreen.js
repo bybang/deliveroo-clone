@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  Dimensions,
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -11,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectRestaurant } from "../features/restaurantSlice";
 import { XMarkIcon } from "react-native-heroicons/solid";
 import * as Progress from "react-native-progress";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { resetBasket } from "../features/basketSlice";
 
 const DeliveryScreen = () => {
@@ -21,13 +22,13 @@ const DeliveryScreen = () => {
 
   const resetBasketItems = () => {
     dispatch(resetBasket());
-    navigation.navigate("Home")
-  }
+    navigation.navigate("Home");
+  };
 
   return (
     <View className="bg-[#00CCBB] flex-1">
       <SafeAreaView className="z-50">
-        <View className="flex-row justify-between items-center p-5">
+        <View className="flex-row justify-between items-center p-5 mt-2">
           <TouchableOpacity onPress={resetBasketItems}>
             <XMarkIcon size={30} color="white" />
           </TouchableOpacity>
@@ -56,6 +57,7 @@ const DeliveryScreen = () => {
         </View>
       </SafeAreaView>
 
+
       <MapView
         initialRegion={{
           latitude: restaurant.lat,
@@ -65,21 +67,22 @@ const DeliveryScreen = () => {
         }}
         className="flex-1 z-0 -mt-10"
         mapType="mutedStandard"
+        provider={PROVIDER_GOOGLE}
       >
         <Marker
           coordinate={{ latitude: restaurant.lat, longitude: restaurant.long }}
           title={restaurant.title}
           description={restaurant.short_description}
           identifier="origin"
+          pinColor="#00CCBB"
         >
           <Image
-            source={{
-              uri: "https://cdn0.iconfinder.com/data/icons/travel-vacation/290/travel-transport-hotel-vacation-holidays-tourist-tourism-travelling-traveling_149-512.png",
-            }}
+            source={require("../assets/custom-marker.png")}
             style={{ width: 50, height: 50, tintColor: "#00CCBB" }}
           />
         </Marker>
       </MapView>
+
 
       <SafeAreaView className="bg-white flex-row h-28 items-center space-x-5">
         <Image
